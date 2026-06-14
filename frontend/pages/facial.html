@@ -8,50 +8,94 @@
 
 <body>
 
-<h1 class="page-title">Facial Emotion Recognition</h1>
+    <h1 class="page-title">
+        Facial Emotion Recognition
+    </h1>
 
-<div class="center">
+    <div class="center">
 
-    <video
-        id="video"
-        autoplay
-        playsinline>
-    </video>
+        <video
+            id="video"
+            autoplay
+            playsinline>
+        </video>
 
-    <canvas
-    id="canvas"
-    style="display:none;">
-    </canvas>
+        <canvas
+            id="canvas"
+            style="display:none;">
+        </canvas>
 
-    <br>
+        <br><br>
 
-    <img
-    id="capturedImage"
-    width="500">
+        <button id="startCamera">
+            Start Camera
+        </button>
 
-    <br><br>
+        <button id="captureBtn">
+            Capture Face
+        </button>
 
-    <button id="startCamera">
-        Start Camera
-    </button>
+    </div>
 
-    <button id="captureBtn">
-        Capture Face
-    </button>
+    <div class="result-card">
 
-</div>
+        <h3>Captured Face</h3>
 
-<div class="result-card">
+        <img
+            id="capturedImage"
+            width="300">
 
-    <h3>Prediction Result</h3>
+    </div>
 
-    <p>Emotion: <span id="emotion">-</span></p>
+    <div class="result-card">
 
-    <p>Confidence: <span id="confidence">-</span></p>
+        <h3>Upload Image</h3>
 
-</div>
+        <input
+            type="file"
+            id="imageFile"
+            accept="image/*">
 
-<script src="../js/facial.js"></script>
+        <br><br>
+
+        <button id="uploadImageBtn">
+            Analyze Uploaded Image
+        </button>
+
+    </div>
+
+    <div class="result-card">
+
+        <h3>Uploaded Preview</h3>
+
+        <img
+            id="uploadedPreview"
+            width="300">
+
+    </div>
+
+    <div class="result-card">
+
+        <h3>Prediction Result</h3>
+
+        <p>
+            Emotion:
+            <span id="emotion">
+                -
+            </span>
+        </p>
+
+        <p>
+            Confidence:
+            <span id="confidence">
+                -
+            </span>
+        </p>
+
+    </div>
+
+    <script src="../js/facial.js"></script>
 
 </body>
+
 </html>

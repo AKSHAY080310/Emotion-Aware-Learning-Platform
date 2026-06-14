@@ -10,6 +10,21 @@ document.getElementById("captureBtn");
 const capturedImage =
 document.getElementById("capturedImage");
 
+const imageFile =
+document.getElementById("imageFile");
+
+const uploadImageBtn =
+document.getElementById("uploadImageBtn");
+
+const uploadedPreview =
+document.getElementById("uploadedPreview");
+
+const emotionText =
+document.getElementById("emotion");
+
+const confidenceText =
+document.getElementById("confidence");
+
 startCamera.addEventListener(
     "click",
     async () => {
@@ -24,19 +39,17 @@ startCamera.addEventListener(
             video.srcObject =
             stream;
 
-            console.log(
-                "Camera Started"
-            );
-
         }
 
         catch(error){
 
-    console.error(error);
+            console.error(error);
 
-    alert(error.name);
+            alert(
+                "Camera Not Available"
+            );
 
-}
+        }
 
     }
 );
@@ -75,9 +88,91 @@ captureBtn.addEventListener(
         capturedImage.src =
         imageData;
 
-        console.log(
-            "Image Captured"
+    }
+);
+
+uploadImageBtn.addEventListener(
+    "click",
+    async () => {
+
+        const file =
+        imageFile.files[0];
+
+        if(!file){
+
+            alert(
+                "Please select an image"
+            );
+
+            return;
+        }
+
+        const reader =
+        new FileReader();
+
+        reader.onload =
+        function(event){
+
+            uploadedPreview.src =
+            event.target.result;
+
+        };
+
+        reader.readAsDataURL(
+            file
         );
+
+        const formData =
+        new FormData();
+
+        formData.append(
+            "image",
+            file
+        );
+
+        try{
+
+            const response =
+            await fetch(
+                "http://127.0.0.1:5000/predict_face",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+            const data =
+            await response.json();
+
+            console.log(data);
+
+            if(data.emotion){
+
+                emotionText.innerText =
+                data.emotion;
+
+                confidenceText.innerText =
+                "N/A";
+
+            }
+            else{
+
+                emotionText.innerText =
+                "Prediction Failed";
+
+            }
+
+        }
+
+        catch(error){
+
+            console.error(error);
+
+            alert(
+                "Backend Connection Error"
+            );
+
+        }
 
     }
 );

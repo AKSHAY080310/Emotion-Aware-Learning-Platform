@@ -7,6 +7,18 @@ document.getElementById("status");
 const player =
 document.getElementById("audioPlayer");
 
+const audioFile =
+document.getElementById("audioFile");
+
+const uploadAudioBtn =
+document.getElementById("uploadAudioBtn");
+
+const emotionText =
+document.getElementById("emotion");
+
+const confidenceText =
+document.getElementById("confidence");
+
 let mediaRecorder;
 let audioChunks = [];
 
@@ -18,12 +30,8 @@ recordBtn.addEventListener(
 
             const stream =
             await navigator.mediaDevices.getUserMedia({
-                audio:true
+                audio: true
             });
-
-            console.log(
-                "MIC ACCESS GRANTED"
-            );
 
             mediaRecorder =
             new MediaRecorder(stream);
@@ -33,33 +41,21 @@ recordBtn.addEventListener(
             mediaRecorder.ondataavailable =
             (event) => {
 
-                console.log(
-                    "Chunk Received"
-                );
-
                 audioChunks.push(
                     event.data
                 );
+
             };
 
             mediaRecorder.onstop =
             () => {
 
-                console.log(
-                    "Recording Stopped"
-                );
-
                 const audioBlob =
                 new Blob(
                     audioChunks,
                     {
-                        type:
-                        "audio/webm"
+                        type: "audio/webm"
                     }
-                );
-
-                console.log(
-                    audioBlob
                 );
 
                 const audioURL =
@@ -90,9 +86,89 @@ recordBtn.addEventListener(
 
         catch(error){
 
-            console.error(
-                error
+            console.error(error);
+
+            statusText.innerText =
+            "Microphone Error";
+
+        }
+
+    }
+);
+
+uploadAudioBtn.addEventListener(
+    "click",
+    async () => {
+
+        const file =
+        audioFile.files[0];
+
+        if(!file){
+
+            alert(
+                "Please select an audio file"
             );
+
+            return;
+        }
+
+        const formData =
+        new FormData();
+
+        formData.append(
+            "audio",
+            file
+        );
+
+        try{
+
+            statusText.innerText =
+            "Predicting...";
+
+            console.log("Sending request...");
+
+            const response =
+            await fetch(
+                "http://127.0.0.1:5000/predict_audio",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+            console.log("Response received");
+
+            const data =
+            await response.json();
+
+            console.log(data);
+
+            if(data.emotion){
+
+                emotionText.innerText =
+                data.emotion;
+
+                confidenceText.innerText =
+                "N/A";
+
+                statusText.innerText =
+                "Prediction Complete";
+
+            }
+            else{
+
+                statusText.innerText =
+                "Prediction Failed";
+
+            }
+
+        }
+        catch(error){
+
+            console.error(error);
+
+            statusText.innerText =
+            "Backend Connection Error";
 
         }
 

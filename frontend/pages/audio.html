@@ -8,32 +8,72 @@
 
 <body>
 
-<h1 class="page-title">Audio Emotion Recognition</h1>
+    <h1 class="page-title">
+        Audio Emotion Recognition
+    </h1>
 
-<div class="center">
+    <div class="center">
 
-    <button id="recordBtn">
-        Start Recording
-    </button>
+        <button id="recordBtn">
+            Start Recording
+        </button>
 
-    <p id="status">
-        Ready
-    </p>
+        <p id="status">
+            Ready
+        </p>
 
-</div>
+    </div>
 
-<div class="result-card">
+    <div class="result-card">
 
-    <h3>Recorded Audio</h3>
+        <h3>Recorded Audio</h3>
 
-    <audio
-        id="audioPlayer"
-        controls>
-    </audio>
+        <audio
+            id="audioPlayer"
+            controls>
+        </audio>
 
-</div>
+    </div>
 
-<script src="../js/audio.js"></script>
+    <div class="result-card">
+
+        <h3>Upload Audio File</h3>
+
+        <input
+            type="file"
+            id="audioFile"
+            accept=".wav,.mp3,.ogg,.m4a">
+
+        <br><br>
+
+        <button id="uploadAudioBtn">
+            Analyze Uploaded Audio
+        </button>
+
+    </div>
+
+    <div class="result-card">
+
+        <h3>Prediction Result</h3>
+
+        <p>
+            Emotion:
+            <span id="emotion">
+                -
+            </span>
+        </p>
+
+        <p>
+            Confidence:
+            <span id="confidence">
+                -
+            </span>
+        </p>
+
+    </div>
+
+    <script src="../js/audio.js"></script>
 
 </body>
+
 </html>
