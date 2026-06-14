@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Facial Analysis</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<h1 class="page-title">Facial Emotion Recognition</h1>
+
+<div class="center">
+
+    <video
+        id="video"
+        autoplay
+        playsinline>
+    </video>
+
+    <canvas
+    id="canvas"
+    style="display:none;">
+    </canvas>
+
+    <br>
+
+    <img
+    id="capturedImage"
+    width="500">
+
+    <br><br>
+
+    <button id="startCamera">
+        Start Camera
+    </button>
+
+    <button id="captureBtn">
+        Capture Face
+    </button>
+
+</div>
+
+<div class="result-card">
+
+    <h3>Prediction Result</h3>
+
+    <p>Emotion: <span id="emotion">-</span></p>
+
+    <p>Confidence: <span id="confidence">-</span></p>
+
+</div>
+
+<script src="../js/facial.js"></script>
+
+</body>
+</html>
