@@ -2,21 +2,121 @@
 <html>
 
 <head>
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="../css/style.css">
+
+    <title>Emotion Analytics Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 
 <body>
 
-    <h1>Dashboard</h1>
+    <div class="dashboard-container">
 
-    <div class="card">
-        Total Sessions: 0
+        <h1 class="page-title">
+            Emotion Analytics Dashboard
+        </h1>
+
+        <div class="stats-container">
+
+            <div class="stat-card">
+
+                <h3>Total Predictions</h3>
+
+                <h2 id="totalPredictions">
+                    0
+                </h2>
+
+            </div>
+
+            <div class="stat-card">
+
+                <h3>Audio Predictions</h3>
+
+                <h2 id="audioCount">
+                    0
+                </h2>
+
+            </div>
+
+            <div class="stat-card">
+
+                <h3>Face Predictions</h3>
+
+                <h2 id="faceCount">
+                    0
+                </h2>
+
+            </div>
+
+            <div class="stat-card">
+
+                <h3>Top Emotion</h3>
+
+                <h2 id="topEmotion">
+                    -
+                </h2>
+
+            </div>
+
+        </div>
+
+        <div class="charts-row">
+
+            <div class="chart-card">
+
+                <h2>
+                    Emotion Distribution
+                </h2>
+
+                <canvas id="emotionChart">
+                </canvas>
+
+            </div>
+
+        </div>
+
+        <div class="table-card">
+
+            <h2>
+                Prediction History
+            </h2>
+
+            <div class="table-container">
+
+                <table id="historyTable">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+                            <th>Type</th>
+                            <th>Filename</th>
+                            <th>Emotion</th>
+                            <th>Confidence</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="card">
-        Most Common Emotion: -
-    </div>
+    <script src="../js/dashboard.js"></script>
 
 </body>
 

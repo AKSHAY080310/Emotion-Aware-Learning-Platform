@@ -10,8 +10,16 @@ from tensorflow.keras.models import load_model
 from utils.audio_features import extract_features
 from utils.face_preprocessing import preprocess_face
 
+from database import (
+    create_database,
+    save_prediction,
+    get_predictions
+)
+
 app = Flask(__name__)
 CORS(app)
+
+create_database()
 
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -67,6 +75,7 @@ def routes():
             "/",
             "/test",
             "/routes",
+            "/history",
             "/predict_audio",
             "/predict_face"
         ]
@@ -108,6 +117,13 @@ def predict_audio():
         emotion = label_encoder.inverse_transform(
             prediction
         )[0]
+        
+        save_prediction(
+            "audio",
+            file.filename,
+            emotion,
+            100
+        )
 
         return jsonify({
             "emotion": emotion
@@ -160,6 +176,13 @@ def predict_face():
         confidence = float(
             np.max(prediction) * 100
         )
+        
+        save_prediction(
+            "face",
+            file.filename,
+            emotion,
+            confidence
+        )
 
         return jsonify({
             "emotion": emotion,
@@ -174,6 +197,13 @@ def predict_face():
         return jsonify({
             "error": str(e)
         }), 500
+        
+@app.route("/history")
+def history():
+
+    data = get_predictions()
+
+    return jsonify(data)        
 
 
 if __name__ == "__main__":

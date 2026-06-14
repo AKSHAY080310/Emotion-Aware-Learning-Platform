@@ -152,7 +152,7 @@ uploadImageBtn.addEventListener(
                 data.emotion;
 
                 confidenceText.innerText =
-                "N/A";
+                data.confidence + "%";
 
             }
             else{

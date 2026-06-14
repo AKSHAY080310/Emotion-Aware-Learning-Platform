@@ -149,7 +149,7 @@ uploadAudioBtn.addEventListener(
                 data.emotion;
 
                 confidenceText.innerText =
-                "N/A";
+                  data.confidence + "%";
 
                 statusText.innerText =
                 "Prediction Complete";
