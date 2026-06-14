@@ -14,11 +14,7 @@ env/
 datasets/
 data/
 
-# trained models
-models/
-*.pt
-*.pth
-*.h5
+
 
 # system files
 .DS_Store
