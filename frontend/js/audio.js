@@ -21,6 +21,7 @@ document.getElementById("confidence");
 
 let mediaRecorder;
 let audioChunks = [];
+let recordedBlob = null;
 
 recordBtn.addEventListener(
     "click",
@@ -41,14 +42,18 @@ recordBtn.addEventListener(
             mediaRecorder.ondataavailable =
             (event) => {
 
-                audioChunks.push(
-                    event.data
-                );
+                if(event.data.size > 0){
+
+                    audioChunks.push(
+                        event.data
+                    );
+
+                }
 
             };
 
             mediaRecorder.onstop =
-            () => {
+            async () => {
 
                 const audioBlob =
                 new Blob(
@@ -56,6 +61,23 @@ recordBtn.addEventListener(
                     {
                         type: "audio/webm"
                     }
+                );
+
+                recordedBlob =
+                audioBlob;
+
+                console.log(
+                    "Recording Complete"
+                );
+
+                console.log(
+                    "Chunks:",
+                    audioChunks.length
+                );
+
+                console.log(
+                    "Blob Size:",
+                    audioBlob.size
                 );
 
                 const audioURL =
@@ -66,8 +88,71 @@ recordBtn.addEventListener(
                 player.src =
                 audioURL;
 
+                player.load();
+
                 statusText.innerText =
-                "Recording Complete";
+                "Predicting...";
+
+                const formData =
+                new FormData();
+
+                formData.append(
+                    "audio",
+                    recordedBlob,
+                    "recorded.webm"
+                );
+
+                try {
+
+                    const response =
+                    await fetch(
+                        "http://127.0.0.1:5000/predict_audio",
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
+
+                    const data =
+                    await response.json();
+
+                    console.log(
+                        "Backend Response:",
+                        data
+                    );
+
+                    if(data.emotion){
+
+                        emotionText.innerText =
+                        data.emotion;
+
+                        confidenceText.innerText =
+                        data.confidence + "%";
+
+                        statusText.innerText =
+                        "Prediction Complete";
+
+                    }
+                    else{
+
+                        statusText.innerText =
+                        "Prediction Failed";
+
+                        console.error(
+                            data.error
+                        );
+
+                    }
+
+                }
+                catch(error){
+
+                    console.error(error);
+
+                    statusText.innerText =
+                    "Backend Error";
+
+                }
 
             };
 
@@ -78,7 +163,14 @@ recordBtn.addEventListener(
 
             setTimeout(() => {
 
-                mediaRecorder.stop();
+                if(
+                    mediaRecorder &&
+                    mediaRecorder.state !== "inactive"
+                ){
+
+                    mediaRecorder.stop();
+
+                }
 
             }, 5000);
 
@@ -110,6 +202,7 @@ uploadAudioBtn.addEventListener(
             );
 
             return;
+
         }
 
         const formData =
@@ -125,8 +218,6 @@ uploadAudioBtn.addEventListener(
             statusText.innerText =
             "Predicting...";
 
-            console.log("Sending request...");
-
             const response =
             await fetch(
                 "http://127.0.0.1:5000/predict_audio",
@@ -136,12 +227,13 @@ uploadAudioBtn.addEventListener(
                 }
             );
 
-            console.log("Response received");
-
             const data =
             await response.json();
 
-            console.log(data);
+            console.log(
+                "Backend Response:",
+                data
+            );
 
             if(data.emotion){
 
@@ -149,7 +241,7 @@ uploadAudioBtn.addEventListener(
                 data.emotion;
 
                 confidenceText.innerText =
-                  data.confidence + "%";
+                data.confidence + "%";
 
                 statusText.innerText =
                 "Prediction Complete";
@@ -159,6 +251,10 @@ uploadAudioBtn.addEventListener(
 
                 statusText.innerText =
                 "Prediction Failed";
+
+                console.error(
+                    data.error
+                );
 
             }
 

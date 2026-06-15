@@ -14,7 +14,8 @@ env/
 datasets/
 data/
 
-
+uploads/*
+!uploads/.gitkeep
 
 # system files
 .DS_Store

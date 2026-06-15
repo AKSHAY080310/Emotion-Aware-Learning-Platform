@@ -1,7 +1,28 @@
 import librosa
 import numpy as np
+import os
+
+from pydub import AudioSegment
+
 
 def extract_features(filepath):
+
+    extension = os.path.splitext(
+        filepath
+    )[1].lower()
+
+    if extension != ".wav":
+
+        wav_path = filepath + ".wav"
+
+        AudioSegment.from_file(
+            filepath
+        ).export(
+            wav_path,
+            format="wav"
+        )
+
+        filepath = wav_path
 
     audio, sr = librosa.load(
         filepath,

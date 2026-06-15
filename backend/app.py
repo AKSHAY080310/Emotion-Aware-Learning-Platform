@@ -1,3 +1,5 @@
+import traceback
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
@@ -25,7 +27,7 @@ UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 audio_model = joblib.load(
-    "../models/audio_svm_model.pkl"
+    "../models/audio_mlp_model.pkl"
 )
 
 scaler = joblib.load(
@@ -41,13 +43,13 @@ face_model = load_model(
 )
 
 emotion_labels = [
-    "Angry",
-    "Disgust",
-    "Fear",
-    "Happy",
-    "Sad",
-    "Surprise",
-    "Neutral"
+    "angry",
+    "disgust",
+    "fear",
+    "happy",
+    "sad",
+    "surprise",
+    "neutral"
 ]
 
 
@@ -113,24 +115,30 @@ def predict_audio():
         prediction = audio_model.predict(
             features_scaled
         )
+        probabilities = audio_model.predict_proba(features_scaled)
 
         emotion = label_encoder.inverse_transform(
             prediction
         )[0]
         
+        confidence = float(np.max(probabilities) *100)
+        
         save_prediction(
             "audio",
             file.filename,
             emotion,
-            100
+            confidence
         )
 
         return jsonify({
-            "emotion": emotion
+            "emotion": emotion,
+            "confidence": round(confidence, 2)
         })
 
     except Exception as e:
+        import traceback
 
+        traceback.print_exc()
         return jsonify({
             "error": str(e)
         }), 500
@@ -193,6 +201,10 @@ def predict_face():
         })
 
     except Exception as e:
+        import traceback
+
+        traceback.print_exc()
+
 
         return jsonify({
             "error": str(e)
