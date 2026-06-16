@@ -106,7 +106,7 @@ recordBtn.addEventListener(
 
                     const response =
                     await fetch(
-                        "https://emotion-recognition-wy5e.onrender.com/predict_audio",
+                        "https://emotion-recognition-2-ilvz.onrender.com/predict_audio",
                         {
                             method: "POST",
                             body: formData
