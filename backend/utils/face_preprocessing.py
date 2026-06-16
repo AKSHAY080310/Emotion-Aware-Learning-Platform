@@ -3,6 +3,7 @@ import numpy as np
 
 
 def preprocess_face(image_path):
+    print("FACE_PREPROCESS_VERSION_2")
 
     image = cv2.imread(image_path)
 
@@ -37,7 +38,7 @@ def preprocess_face(image_path):
 
     # Fallback if no face is detected
     if len(faces) == 0:
-
+        print("FACE_PREPROCESS_VERSION_2")
         print(
             "No face detected. Using entire image."
         )
