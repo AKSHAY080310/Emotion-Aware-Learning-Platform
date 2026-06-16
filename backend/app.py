@@ -1,9 +1,10 @@
 import traceback
+import tempfile
+import os
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-import os
 import joblib
 import numpy as np
 
@@ -21,26 +22,21 @@ from database import (
 app = Flask(__name__)
 CORS(app)
 
+# Keep this unless database.py is actually recreating emotion.db
 create_database()
 
-UPLOAD_FOLDER = "uploads"
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-audio_model = joblib.load(
-    "../models/audio_mlp_model.pkl"
-)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-scaler = joblib.load(
-    "../models/audio_standardscaler.pkl"
-)
+MODELS_DIR = os.path.join(BASE_DIR,"..","models")
 
-label_encoder = joblib.load(
-    "../models/audio_labelencoder.pkl"
-)
+audio_model = joblib.load(os.path.join(MODELS_DIR,"audio_mlp_model.pkl"))
 
-face_model = load_model(
-    "../models/fer_emotion_model.keras"
-)
+scaler = joblib.load(os.path.join(MODELS_DIR,"audio_standardscaler.pkl"))
+
+label_encoder = joblib.load(os.path.join(MODELS_DIR,"audio_labelencoder.pkl"))
+
+face_model = load_model(os.path.join(MODELS_DIR,"fer_emotion_model.keras"))
 
 emotion_labels = [
     "angry",
@@ -55,7 +51,6 @@ emotion_labels = [
 
 @app.route("/")
 def home():
-
     return jsonify({
         "message": "Emotion Recognition Backend Running"
     })
@@ -63,7 +58,6 @@ def home():
 
 @app.route("/test")
 def test():
-
     return jsonify({
         "status": "working"
     })
@@ -71,7 +65,6 @@ def test():
 
 @app.route("/routes")
 def routes():
-
     return jsonify({
         "available_routes": [
             "/",
@@ -87,25 +80,31 @@ def routes():
 @app.route("/predict_audio", methods=["POST"])
 def predict_audio():
 
+    temp_path = None
+
     try:
 
         if "audio" not in request.files:
-
             return jsonify({
                 "error": "No audio file uploaded"
             }), 400
 
         file = request.files["audio"]
 
-        filepath = os.path.join(
-            UPLOAD_FOLDER,
+        extension = os.path.splitext(
             file.filename
-        )
+        )[1] or ".tmp"
 
-        file.save(filepath)
+        with tempfile.NamedTemporaryFile(
+            suffix=extension,
+            delete=False
+        ) as temp_file:
+
+            file.save(temp_file.name)
+            temp_path = temp_file.name
 
         features = extract_features(
-            filepath
+            temp_path
         )
 
         features_scaled = scaler.transform(
@@ -115,14 +114,19 @@ def predict_audio():
         prediction = audio_model.predict(
             features_scaled
         )
-        probabilities = audio_model.predict_proba(features_scaled)
+
+        probabilities = audio_model.predict_proba(
+            features_scaled
+        )
 
         emotion = label_encoder.inverse_transform(
             prediction
         )[0]
-        
-        confidence = float(np.max(probabilities) *100)
-        
+
+        confidence = float(
+            np.max(probabilities) * 100
+        )
+
         save_prediction(
             "audio",
             file.filename,
@@ -132,40 +136,54 @@ def predict_audio():
 
         return jsonify({
             "emotion": emotion,
-            "confidence": round(confidence, 2)
+            "confidence": round(
+                confidence,
+                2
+            )
         })
 
     except Exception as e:
-        import traceback
 
         traceback.print_exc()
+
         return jsonify({
             "error": str(e)
         }), 500
+
+    finally:
+
+        if temp_path and os.path.exists(temp_path):
+            os.remove(temp_path)
 
 
 @app.route("/predict_face", methods=["POST"])
 def predict_face():
 
+    temp_path = None
+
     try:
 
         if "image" not in request.files:
-
             return jsonify({
                 "error": "No image uploaded"
             }), 400
 
         file = request.files["image"]
 
-        filepath = os.path.join(
-            UPLOAD_FOLDER,
+        extension = os.path.splitext(
             file.filename
-        )
+        )[1] or ".tmp"
 
-        file.save(filepath)
+        with tempfile.NamedTemporaryFile(
+            suffix=extension,
+            delete=False
+        ) as temp_file:
+
+            file.save(temp_file.name)
+            temp_path = temp_file.name
 
         img = preprocess_face(
-            filepath
+            temp_path
         )
 
         prediction = face_model.predict(
@@ -184,7 +202,7 @@ def predict_face():
         confidence = float(
             np.max(prediction) * 100
         )
-        
+
         save_prediction(
             "face",
             file.filename,
@@ -201,21 +219,25 @@ def predict_face():
         })
 
     except Exception as e:
-        import traceback
 
         traceback.print_exc()
-
 
         return jsonify({
             "error": str(e)
         }), 500
-        
+
+    finally:
+
+        if temp_path and os.path.exists(temp_path):
+            os.remove(temp_path)
+
+
 @app.route("/history")
 def history():
 
     data = get_predictions()
 
-    return jsonify(data)        
+    return jsonify(data)
 
 
 if __name__ == "__main__":

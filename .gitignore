@@ -1,26 +1,25 @@
-# Python cache
+
 __pycache__/
 *.pyc
 
-# Virtual environment
+
 venv/
 env/
 .env/
 
-# Jupyter
+
 .ipynb_checkpoints/
 
-# datasets
 datasets/
 data/
 
 uploads/*
 !uploads/.gitkeep
-
-# system files
 .DS_Store
 Thumbs.db
-
-# IDE files
 .vscode/
 .idea/
+
+backend/uploads
+emotion_recognition.db
+/requirements.txt
