@@ -134,7 +134,7 @@ uploadImageBtn.addEventListener(
 
             const response =
             await fetch(
-                "http://127.0.0.1:5000/predict_face",
+                "https://emotion-recognition-wy5e.onrender.com/predict_face",
                 {
                     method: "POST",
                     body: formData

@@ -223,7 +223,8 @@ def predict_face():
         traceback.print_exc()
 
         return jsonify({
-            "error": str(e)
+            "error": str(e),
+            "type": str(type(e))
         }), 500
 
     finally:
