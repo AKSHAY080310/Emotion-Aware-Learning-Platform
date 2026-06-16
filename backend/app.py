@@ -172,6 +172,10 @@ def history():
 
     return jsonify(data)
 
+@app.route("/ping")
+def ping():
+    return "PING WORKS"
+
 
 if __name__ == "__main__":
 
