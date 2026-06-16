@@ -121,11 +121,10 @@ def predict_face():
 
         print("STEP 4: Face preprocessing successful")
 
-        prediction = face_model.predict(
-            img,
-            verbose=0
-        )
-
+        return jsonify({
+            "emotion": "test",
+            "confidence": 100
+        })
         print("STEP 5: Model prediction successful")
 
         emotion_index = np.argmax(
