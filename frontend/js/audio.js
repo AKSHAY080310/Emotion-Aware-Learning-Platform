@@ -106,7 +106,7 @@ recordBtn.addEventListener(
 
                     const response =
                     await fetch(
-                        "https://emotion-recognition-2-ilvz.onrender.com/predict_audio",
+                        "https://emotion-recognition-1-daeh.onrender.com/predict_audio",
                         {
                             method: "POST",
                             body: formData
@@ -220,7 +220,7 @@ uploadAudioBtn.addEventListener(
 
             const response =
             await fetch(
-                "http://127.0.0.1:5000/predict_audio",
+                "https://emotion-recognition-1-daeh.onrender.com/predict_audio",
                 {
                     method: "POST",
                     body: formData
