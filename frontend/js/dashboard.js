@@ -3,7 +3,7 @@ async function loadDashboard() {
     try {
 
         const response = await fetch(
-            "https://emotion-recognition-1-daeh.onrender.com/history"
+            "http://localhost:5000/history"
         );
 
         const data = await response.json();

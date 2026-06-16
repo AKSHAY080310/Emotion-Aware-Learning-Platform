@@ -220,7 +220,7 @@ uploadAudioBtn.addEventListener(
 
             const response =
             await fetch(
-                "https://emotion-recognition-1-daeh.onrender.com/predict_audio",
+                "http://localhost:5000/predict_audio",
                 {
                     method: "POST",
                     body: formData
