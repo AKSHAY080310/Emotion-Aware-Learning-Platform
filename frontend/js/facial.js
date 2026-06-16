@@ -25,6 +25,8 @@ document.getElementById("emotion");
 const confidenceText =
 document.getElementById("confidence");
 
+console.log("FACIAL.JS LOADED");
+
 startCamera.addEventListener(
     "click",
     async () => {
@@ -132,6 +134,11 @@ uploadImageBtn.addEventListener(
 
         try{
 
+            console.log(
+                "Sending image:",
+                file.name
+            );
+
             const response =
             await fetch(
                 "https://emotion-recognition-2-ilvz.onrender.com/predict_face",
@@ -141,10 +148,44 @@ uploadImageBtn.addEventListener(
                 }
             );
 
-            const data =
-            await response.json();
+            console.log(
+                "HTTP Status:",
+                response.status
+            );
 
-            console.log(data);
+            const responseText =
+            await response.text();
+
+            console.log(
+                "Raw Response:",
+                responseText
+            );
+
+            if(!response.ok){
+
+                emotionText.innerText =
+                "Server Error";
+
+                confidenceText.innerText =
+                "";
+
+                alert(
+                    "Server Error:\n" +
+                    responseText
+                );
+
+                return;
+            }
+
+            const data =
+            JSON.parse(
+                responseText
+            );
+
+            console.log(
+                "Parsed Data:",
+                data
+            );
 
             if(data.emotion){
 
@@ -160,13 +201,25 @@ uploadImageBtn.addEventListener(
                 emotionText.innerText =
                 "Prediction Failed";
 
+                confidenceText.innerText =
+                "";
+
             }
 
         }
 
         catch(error){
 
-            console.error(error);
+            console.error(
+                "Fetch Error:",
+                error
+            );
+
+            emotionText.innerText =
+            "Connection Error";
+
+            confidenceText.innerText =
+            "";
 
             alert(
                 "Backend Connection Error"
