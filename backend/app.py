@@ -156,14 +156,94 @@ def predict_audio():
             os.remove(temp_path)
 
 
-
 @app.route("/predict_face", methods=["POST"])
 def predict_face():
 
-    return jsonify({
-        "emotion": "happy",
-        "confidence": 99
-    })
+    temp_path = None
+
+    try:
+
+        if "image" not in request.files:
+
+            return jsonify({
+                "error": "No image uploaded"
+            }), 400
+
+        file = request.files["image"]
+
+        extension = os.path.splitext(
+            file.filename
+        )[1] or ".jpg"
+
+        with tempfile.NamedTemporaryFile(
+            suffix=extension,
+            delete=False
+        ) as temp_file:
+
+            file.save(temp_file.name)
+            temp_path = temp_file.name
+
+        print("Image received:", file.filename)
+
+        img = preprocess_face(
+            temp_path
+        )
+
+        print("Preprocessing complete")
+
+        prediction = face_model.predict(
+            img,
+            verbose=0
+        )
+
+        emotion_index = np.argmax(
+            prediction
+        )
+
+        emotion = emotion_labels[
+            emotion_index
+        ]
+
+        confidence = float(
+            np.max(prediction) * 100
+        )
+
+        save_prediction(
+            "face",
+            file.filename,
+            emotion,
+            confidence
+        )
+
+        return jsonify({
+            "emotion": emotion,
+            "confidence": round(
+                confidence,
+                2
+            )
+        })
+
+    except Exception as e:
+
+        traceback.print_exc()
+
+        return jsonify({
+            "error": str(e)
+        }), 500
+
+    finally:
+
+        if (
+            temp_path and
+            os.path.exists(temp_path)
+        ):
+
+            try:
+
+                os.remove(temp_path)
+
+            except Exception:
+                pass
 
 @app.route("/history")
 def history():
