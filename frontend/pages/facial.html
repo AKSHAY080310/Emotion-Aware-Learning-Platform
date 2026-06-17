@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Facial Analysis</title>
+    <title>Facial Emotion Recognition</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 
@@ -12,7 +12,21 @@
         Facial Emotion Recognition
     </h1>
 
-    <div class="center">
+    <div class="camera-controls">
+
+        <button id="startCamera">
+            Start Camera
+        </button>
+
+        <button id="captureBtn">
+            Capture Face
+        </button>
+
+    </div>
+
+    <div class="result-card capture-card">
+
+        <h3>Captured Face</h3>
 
         <video
             id="video"
@@ -25,25 +39,9 @@
             style="display:none;">
         </canvas>
 
-        <br><br>
-
-        <button id="startCamera">
-            Start Camera
-        </button>
-
-        <button id="captureBtn">
-            Capture Face
-        </button>
-
-    </div>
-
-    <div class="result-card">
-
-        <h3>Captured Face</h3>
-
         <img
             id="capturedImage"
-            width="300">
+            style="display:none;">
 
     </div>
 
@@ -80,16 +78,12 @@
 
         <p>
             Emotion:
-            <span id="emotion">
-                -
-            </span>
+            <span id="emotion">-</span>
         </p>
 
         <p>
             Confidence:
-            <span id="confidence">
-                -
-            </span>
+            <span id="confidence">-</span>
         </p>
 
     </div>

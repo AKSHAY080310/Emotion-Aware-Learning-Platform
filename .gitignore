@@ -20,6 +20,6 @@ Thumbs.db
 .vscode/
 .idea/
 
-backend/uploads
-emotion_recognition.db
+
+
 /requirements.txt

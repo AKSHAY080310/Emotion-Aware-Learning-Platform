@@ -1,31 +1,18 @@
-const video =
-document.getElementById("video");
+const video = document.getElementById("video");
+const startCamera = document.getElementById("startCamera");
+const captureBtn = document.getElementById("captureBtn");
+const capturedImage = document.getElementById("capturedImage");
 
-const startCamera =
-document.getElementById("startCamera");
+const imageFile = document.getElementById("imageFile");
+const uploadImageBtn = document.getElementById("uploadImageBtn");
+const uploadedPreview = document.getElementById("uploadedPreview");
 
-const captureBtn =
-document.getElementById("captureBtn");
-
-const capturedImage =
-document.getElementById("capturedImage");
-
-const imageFile =
-document.getElementById("imageFile");
-
-const uploadImageBtn =
-document.getElementById("uploadImageBtn");
-
-const uploadedPreview =
-document.getElementById("uploadedPreview");
-
-const emotionText =
-document.getElementById("emotion");
-
-const confidenceText =
-document.getElementById("confidence");
+const emotionText = document.getElementById("emotion");
+const confidenceText = document.getElementById("confidence");
 
 console.log("FACIAL.JS LOADED");
+
+/* Start Camera */
 
 startCamera.addEventListener(
     "click",
@@ -34,16 +21,16 @@ startCamera.addEventListener(
         try {
 
             const stream =
-            await navigator.mediaDevices.getUserMedia({
-                video: true
-            });
+                await navigator.mediaDevices.getUserMedia({
+                    video: true
+                });
 
-            video.srcObject =
-            stream;
+            video.style.display = "block";
+            video.srcObject = stream;
 
         }
 
-        catch(error){
+        catch (error) {
 
             console.error(error);
 
@@ -56,25 +43,27 @@ startCamera.addEventListener(
     }
 );
 
+/* Capture Face */
+
 captureBtn.addEventListener(
     "click",
     () => {
 
         const canvas =
-        document.getElementById(
-            "canvas"
-        );
+            document.getElementById(
+                "canvas"
+            );
 
         const ctx =
-        canvas.getContext(
-            "2d"
-        );
+            canvas.getContext(
+                "2d"
+            );
 
         canvas.width =
-        video.videoWidth;
+            video.videoWidth;
 
         canvas.height =
-        video.videoHeight;
+            video.videoHeight;
 
         ctx.drawImage(
             video,
@@ -83,24 +72,29 @@ captureBtn.addEventListener(
         );
 
         const imageData =
-        canvas.toDataURL(
-            "image/jpeg"
-        );
+            canvas.toDataURL(
+                "image/jpeg"
+            );
 
         capturedImage.src =
-        imageData;
+            imageData;
+
+        capturedImage.style.display =
+            "block";
 
     }
 );
+
+/* Upload Image Prediction */
 
 uploadImageBtn.addEventListener(
     "click",
     async () => {
 
         const file =
-        imageFile.files[0];
+            imageFile.files[0];
 
-        if(!file){
+        if (!file) {
 
             alert(
                 "Please select an image"
@@ -110,116 +104,88 @@ uploadImageBtn.addEventListener(
         }
 
         const reader =
-        new FileReader();
+            new FileReader();
 
         reader.onload =
-        function(event){
+            function (event) {
 
-            uploadedPreview.src =
-            event.target.result;
+                uploadedPreview.src =
+                    event.target.result;
 
-        };
+            };
 
         reader.readAsDataURL(
             file
         );
 
         const formData =
-        new FormData();
+            new FormData();
 
         formData.append(
             "image",
             file
         );
 
-        try{
-
-            console.log(
-                "Sending image:",
-                file.name
-            );
+        try {
 
             const response =
-            await fetch(
-                "http://localhost:5000/predict_face",
-                {
-                    method: "POST",
-                    body: formData
-                }
-            );
-
-            console.log(
-                "HTTP Status:",
-                response.status
-            );
+                await fetch(
+                    "http://localhost:5000/predict_face",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
 
             const responseText =
-            await response.text();
+                await response.text();
 
-            console.log(
-                "Raw Response:",
-                responseText
-            );
-
-            if(!response.ok){
+            if (!response.ok) {
 
                 emotionText.innerText =
-                "Server Error";
+                    "Server Error";
 
                 confidenceText.innerText =
-                "";
-
-                alert(
-                    "Server Error:\n" +
-                    responseText
-                );
+                    "-";
 
                 return;
             }
 
             const data =
-            JSON.parse(
-                responseText
-            );
+                JSON.parse(
+                    responseText
+                );
 
-            console.log(
-                "Parsed Data:",
-                data
-            );
-
-            if(data.emotion){
+            if (data.emotion) {
 
                 emotionText.innerText =
-                data.emotion;
+                    data.emotion;
 
                 confidenceText.innerText =
-                data.confidence + "%";
+                    data.confidence + "%";
 
             }
-            else{
+            else {
 
                 emotionText.innerText =
-                "Prediction Failed";
+                    "Prediction Failed";
 
                 confidenceText.innerText =
-                "";
+                    "-";
 
             }
 
         }
 
-        catch(error){
+        catch (error) {
 
-            console.error(
-                "Fetch Error:",
-                error
-            );
+            console.error(error);
 
             emotionText.innerText =
-            "Connection Error";
+                "Connection Error";
 
             confidenceText.innerText =
-            "";
+                "-";
 
             alert(
                 "Backend Connection Error"
