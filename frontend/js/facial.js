@@ -10,6 +10,8 @@ const uploadedPreview = document.getElementById("uploadedPreview");
 const emotionText = document.getElementById("emotion");
 const confidenceText = document.getElementById("confidence");
 
+let stream = null;
+
 console.log("FACIAL.JS LOADED");
 
 /* Start Camera */
@@ -20,7 +22,7 @@ startCamera.addEventListener(
 
         try {
 
-            const stream =
+            stream =
                 await navigator.mediaDevices.getUserMedia({
                     video: true
                 });
@@ -43,44 +45,132 @@ startCamera.addEventListener(
     }
 );
 
-/* Capture Face */
+/* Capture Face + Predict */
 
 captureBtn.addEventListener(
     "click",
-    () => {
+    async () => {
 
-        const canvas =
-            document.getElementById(
-                "canvas"
+        try {
+
+            const canvas =
+                document.getElementById(
+                    "canvas"
+                );
+
+            const ctx =
+                canvas.getContext(
+                    "2d"
+                );
+
+            canvas.width =
+                video.videoWidth;
+
+            canvas.height =
+                video.videoHeight;
+
+            ctx.drawImage(
+                video,
+                0,
+                0
             );
 
-        const ctx =
-            canvas.getContext(
-                "2d"
-            );
+            const imageData =
+                canvas.toDataURL(
+                    "image/jpeg"
+                );
 
-        canvas.width =
-            video.videoWidth;
+            capturedImage.src =
+                imageData;
 
-        canvas.height =
-            video.videoHeight;
+            capturedImage.style.display =
+                "block";
 
-        ctx.drawImage(
-            video,
-            0,
-            0
-        );
+            canvas.toBlob(
+                async (blob) => {
 
-        const imageData =
-            canvas.toDataURL(
+                    const formData =
+                        new FormData();
+
+                    formData.append(
+                        "image",
+                        blob,
+                        "capture.jpg"
+                    );
+
+                    try {
+
+                        const response =
+                            await fetch(
+                                "/predict_face",
+                                {
+                                    method: "POST",
+                                    body: formData
+                                }
+                            );
+
+                        if (!response.ok) {
+
+                            emotionText.innerText =
+                                "Server Error";
+
+                            confidenceText.innerText =
+                                "-";
+
+                            return;
+                        }
+
+                        const data =
+                            await response.json();
+
+                        emotionText.innerText =
+                            data.emotion;
+
+                        confidenceText.innerText =
+                            data.confidence + "%";
+
+                    }
+
+                    catch (error) {
+
+                        console.error(error);
+
+                        emotionText.innerText =
+                            "Prediction Failed";
+
+                        confidenceText.innerText =
+                            "-";
+
+                    }
+
+                },
                 "image/jpeg"
             );
 
-        capturedImage.src =
-            imageData;
+            if (stream) {
 
-        capturedImage.style.display =
-            "block";
+                stream.getTracks().forEach(
+                    track => track.stop()
+                );
+
+                video.srcObject = null;
+
+                video.style.display = "none";
+            }
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            emotionText.innerText =
+                "Prediction Failed";
+
+            confidenceText.innerText =
+                "-";
+
+        }
 
     }
 );
@@ -130,15 +220,12 @@ uploadImageBtn.addEventListener(
 
             const response =
                 await fetch(
-                    "http://13.202.84.240:5000/predict_face",
+                    "/predict_face",
                     {
                         method: "POST",
                         body: formData
                     }
                 );
-
-            const responseText =
-                await response.text();
 
             if (!response.ok) {
 
@@ -152,9 +239,7 @@ uploadImageBtn.addEventListener(
             }
 
             const data =
-                JSON.parse(
-                    responseText
-                );
+                await response.json();
 
             if (data.emotion) {
 
@@ -165,6 +250,7 @@ uploadImageBtn.addEventListener(
                     data.confidence + "%";
 
             }
+
             else {
 
                 emotionText.innerText =

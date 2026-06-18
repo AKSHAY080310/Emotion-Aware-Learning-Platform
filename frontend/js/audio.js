@@ -106,7 +106,7 @@ recordBtn.addEventListener(
 
                     const response =
                     await fetch(
-                        "http://13.202.84.240:5000/predict_audio",
+                        "/predict_audio",
                         {
                             method: "POST",
                             body: formData
@@ -220,7 +220,7 @@ uploadAudioBtn.addEventListener(
 
             const response =
             await fetch(
-                "http://13.202.84.240:5000/predict_audio",
+                "/predict_audio",
                 {
                     method: "POST",
                     body: formData
