@@ -20,6 +20,6 @@ Thumbs.db
 .vscode/
 .idea/
 
-
+/emotion_recognition.db
 
 /requirements.txt
