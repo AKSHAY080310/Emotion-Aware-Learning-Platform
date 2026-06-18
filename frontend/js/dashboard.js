@@ -3,7 +3,7 @@ async function loadDashboard() {
     try {
 
         const response = await fetch(
-            "http://localhost:5000/history"
+            "http://13.202.84.240:5000/history"
         );
 
         const data = await response.json();

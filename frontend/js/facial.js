@@ -130,7 +130,7 @@ uploadImageBtn.addEventListener(
 
             const response =
                 await fetch(
-                    "http://localhost:5000/predict_face",
+                    "http://13.202.84.240:5000/predict_face",
                     {
                         method: "POST",
                         body: formData
