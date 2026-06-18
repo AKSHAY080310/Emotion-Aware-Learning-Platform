@@ -106,7 +106,7 @@ recordBtn.addEventListener(
 
                     const response =
                     await fetch(
-                        "/predict_audio",
+                        "https://emotion-recognition.duckdns.org/predict_audio",
                         {
                             method: "POST",
                             body: formData
@@ -220,7 +220,7 @@ uploadAudioBtn.addEventListener(
 
             const response =
             await fetch(
-                "/predict_audio",
+                "https://emotion-recognition.duckdns.org/predict_audio",
                 {
                     method: "POST",
                     body: formData

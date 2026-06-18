@@ -102,7 +102,7 @@ captureBtn.addEventListener(
 
                         const response =
                             await fetch(
-                                "/predict_face",
+                                "https://emotion-recognition.duckdns.org/predict_face",
                                 {
                                     method: "POST",
                                     body: formData
@@ -220,7 +220,7 @@ uploadImageBtn.addEventListener(
 
             const response =
                 await fetch(
-                    "/predict_face",
+                    "https://emotion-recognition.duckdns.org/predict_face",
                     {
                         method: "POST",
                         body: formData
