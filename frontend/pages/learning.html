@@ -3,27 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learning Center</title>
-
+    <title>Learning Module</title>
     <link rel="stylesheet" href="../css/learning.css">
 </head>
 <body>
 
-    <div class="learning-container">
+    <div class="container">
 
-        <h1>Learning Center</h1>
-
+        <h1>Learning Module</h1>
         <p class="subtitle">
-            Learn different emotions through interactive flashcards
+            Learn emotions and test your understanding
         </p>
 
-        <section class="flashcards-section">
+        <div class="menu">
 
-            <h2>Emotion Flashcards</h2>
+            <button id="flashcardsBtn">
+                Flashcards
+            </button>
 
-            <div id="flashcardsContainer"></div>
+            <button id="quizBtn">
+                Quiz
+            </button>
 
-        </section>
+        </div>
+
+        <div id="content"></div>
 
     </div>
 
