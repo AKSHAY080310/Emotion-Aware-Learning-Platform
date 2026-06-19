@@ -1,35 +1,33 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Learning Center</title>
-    <link rel="stylesheet" href="../css/style.css">
-</head>
 
+    <link rel="stylesheet" href="../css/learning.css">
+</head>
 <body>
 
-    <h1>Learning Center</h1>
+    <div class="learning-container">
 
-    <div class="card">
+        <h1>Learning Center</h1>
 
-        <h3>Happy</h3>
-
-        <p>
-            Learn common signs of happiness.
+        <p class="subtitle">
+            Learn different emotions through interactive flashcards
         </p>
+
+        <section class="flashcards-section">
+
+            <h2>Emotion Flashcards</h2>
+
+            <div id="flashcardsContainer"></div>
+
+        </section>
 
     </div>
 
-    <div class="card">
-
-        <h3>Sad</h3>
-
-        <p>
-            Learn common signs of sadness.
-        </p>
-
-    </div>
+    <script src="../js/learning.js"></script>
 
 </body>
-
 </html>
