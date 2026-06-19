@@ -312,7 +312,8 @@ h1{
 
 .flashcard-grid{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:repeat(3,300px);
+    justify-content:center;
     gap:25px;
 }
 
