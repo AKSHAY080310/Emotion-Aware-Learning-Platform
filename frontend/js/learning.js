@@ -75,7 +75,7 @@ async function loadRecommendations(){
 
         const response =
             await fetch(
-                `http://127.0.0.1:5000/latest_prediction/${userId}`
+                `https://emotion-recognition.duckdns.org/latest_prediction/${userId}`
             );
 
         const data =
@@ -166,7 +166,7 @@ async function trackActivity(activityName){
     try{
 
         await fetch(
-            "http://127.0.0.1:5000/activity",
+            "https://emotion-recognition.duckdns.org/activity",
             {
                 method:"POST",
 
