@@ -18,6 +18,7 @@ document.getElementById("emotion");
 
 const confidenceText =
 document.getElementById("confidence");
+const userId = localStorage.getItem("user_id");
 
 let mediaRecorder;
 let audioChunks = [];
@@ -101,12 +102,15 @@ recordBtn.addEventListener(
                     recordedBlob,
                     "recorded.webm"
                 );
+                formData.append(
+                    "user_id",userId
+                )
 
                 try {
 
                     const response =
                     await fetch(
-                        "https://emotion-recognition.duckdns.org/predict_audio",
+                        "http://127.0.0.1:5000/predict_audio",
                         {
                             method: "POST",
                             body: formData
@@ -212,6 +216,10 @@ uploadAudioBtn.addEventListener(
             "audio",
             file
         );
+        formData.append(
+            "user_id",userId
+        )
+
 
         try{
 
@@ -220,7 +228,7 @@ uploadAudioBtn.addEventListener(
 
             const response =
             await fetch(
-                "https://emotion-recognition.duckdns.org/predict_audio",
+                "http://127.0.0.1:5000/predict_audio",
                 {
                     method: "POST",
                     body: formData

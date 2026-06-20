@@ -4,6 +4,7 @@
 <head>
     <title>Emotion Recognition</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/index.css">
 </head>
 
 <body>
@@ -18,8 +19,27 @@
         <li><a href="pages/facial.html">Facial</a></li>
         <li><a href="pages/learning.html">Learning</a></li>
         <li><a href="pages/dashboard.html">Dashboard</a></li>
-        <li><a href="pages/settings.html">Settings</a></li>
     </ul>
+
+    <div class="profile-container">
+
+        <button id="profileBtn">
+            <span id="username">User</span> &#9662;
+        </button>
+
+        <div id="profileMenu" class="profile-menu">
+
+            <a href="pages/settings.html">
+                Profile
+            </a>
+
+            <a href="#" id="logoutBtn">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
 
 </nav>
 
@@ -31,7 +51,7 @@
         Real-Time Emotion Recognition using Audio and Facial Expressions
     </p>
 
-    <a href="pages/audio.html" class="btn">
+    <a href="pages/learning.html" class="btn">
         Get Started
     </a>
 
@@ -60,6 +80,6 @@
     </div>
 
 </section>
-
+<script src="js/index.js"></script>
 </body>
 </html>

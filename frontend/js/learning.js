@@ -1,10 +1,204 @@
-const content = document.getElementById("content");
+let currentEmotion = null;
+
+const content =
+    document.getElementById("content");
 
 const flashcardsBtn =
-document.getElementById("flashcardsBtn");
+    document.getElementById("flashcardsBtn");
 
 const quizBtn =
-document.getElementById("quizBtn");
+    document.getElementById("quizBtn");
+
+
+
+
+function getRecommendations(emotion){
+
+    if(!emotion){
+
+        return [
+            "Flashcards",
+            "Quiz"
+        ];
+    }
+
+    switch(emotion.toLowerCase()){
+
+        case "happy":
+            return [
+                "Flashcards",
+                "Quiz"
+            ];
+
+        case "sad":
+            return [
+                "Flashcards"
+            ];
+
+        case "angry":
+            return [
+                "Flashcards"
+            ];
+
+        case "fear":
+            return [
+                "Flashcards",
+                "Quiz"
+            ];
+
+        case "surprise":
+            return [
+                "Quiz"
+            ];
+
+        default:
+            return [
+                "Flashcards",
+                "Quiz"
+            ];
+    }
+}
+
+
+async function loadRecommendations(){
+
+    const userId =
+        localStorage.getItem(
+            "user_id"
+        );
+
+    if(!userId){
+        return;
+    }
+
+    try{
+
+        const response =
+            await fetch(
+                `http://127.0.0.1:5000/latest_prediction/${userId}`
+            );
+
+        const data =
+            await response.json();
+
+        const emotionStatus =
+            document.getElementById(
+                "emotionStatus"
+            );
+
+        const recommendationDiv =
+            document.getElementById(
+                "recommendations"
+            );
+
+        if(!data.emotion){
+
+            currentEmotion = null;
+
+            emotionStatus.innerHTML =
+            `
+            No emotion assessment found.
+            <br><br>
+            All learning activities are available.
+            `;
+
+            recommendationDiv.innerHTML =
+            `
+            <p>✓ Flashcards</p>
+            <p>✓ Quiz</p>
+            `;
+
+            return;
+        }
+
+        currentEmotion =
+            data.emotion;
+
+        emotionStatus.innerHTML =
+        `
+        Latest Emotion:
+        <strong>${data.emotion}</strong>
+        `;
+
+        const recommendations =
+            getRecommendations(
+                data.emotion
+            );
+
+        recommendationDiv.innerHTML =
+            recommendations
+            .map(
+                item =>
+                `<p>✓ ${item}</p>`
+            )
+            .join("");
+
+    }
+    catch(error){
+
+        console.error(
+            error
+        );
+
+    }
+}
+
+
+
+async function trackActivity(activityName){
+    console.log("TRACKING");
+    console.log("currentEmotion =", currentEmotion);
+    console.log("activity =", activityName);
+
+    const userId =
+        localStorage.getItem(
+            "user_id"
+        );
+
+    if(!userId){
+        return;
+    }
+
+    if(!currentEmotion){
+        return;
+    }
+
+    try{
+
+        await fetch(
+            "http://127.0.0.1:5000/activity",
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":
+                    "application/json"
+                },
+
+                body:JSON.stringify({
+
+                    user_id:userId,
+
+                    emotion:currentEmotion,
+
+                    activity_name:
+                    activityName
+
+                })
+            }
+        );
+
+    }
+    catch(error){
+
+        console.error(
+            error
+        );
+
+    }
+}
+
+
 
 const emotions = [
 
@@ -59,7 +253,9 @@ example:"Waiting for a bus."
 
 ];
 
-function showFlashcards(){
+
+
+function renderFlashcards(){
 
     let html =
     `<div class="flashcard-grid">`;
@@ -94,81 +290,88 @@ function showFlashcards(){
     content.innerHTML = html;
 }
 
+function showFlashcards(){
+
+    trackActivity(
+        "Flashcards"
+    );
+
+    renderFlashcards();
+}
+
+
+
 const questions = [
 
 {
-question:
-"How would you feel if someone gave you a birthday gift?",
+question:"How would you feel if someone gave you a birthday gift?",
 options:["Happy","Sad","Angry","Fear"],
 answer:"Happy"
 },
 
 {
-question:
-"You lost your favorite toy.",
+question:"You lost your favorite toy.",
 options:["Happy","Sad","Neutral","Surprise"],
 answer:"Sad"
 },
 
 {
-question:
-"Someone broke your toy.",
+question:"Someone broke your toy.",
 options:["Happy","Angry","Fear","Neutral"],
 answer:"Angry"
 },
 
 {
-question:
-"A loud thunderstorm starts.",
+question:"A loud thunderstorm starts.",
 options:["Fear","Happy","Neutral","Disgust"],
 answer:"Fear"
 },
 
 {
-question:
-"You see a surprise party.",
+question:"You see a surprise party.",
 options:["Surprise","Angry","Sad","Fear"],
 answer:"Surprise"
 },
 
 {
-question:
-"You smell rotten food.",
+question:"You smell rotten food.",
 options:["Happy","Disgust","Surprise","Neutral"],
 answer:"Disgust"
 },
 
 {
-question:
-"Waiting quietly for a bus.",
+question:"Waiting quietly for a bus.",
 options:["Neutral","Angry","Fear","Happy"],
 answer:"Neutral"
 },
 
 {
-question:
-"You won a competition.",
+question:"You won a competition.",
 options:["Happy","Sad","Fear","Neutral"],
 answer:"Happy"
 },
 
 {
-question:
-"Your pet ran away.",
+question:"Your pet ran away.",
 options:["Sad","Happy","Disgust","Neutral"],
 answer:"Sad"
 },
 
 {
-question:
-"A balloon suddenly pops.",
+question:"A balloon suddenly pops.",
 options:["Surprise","Happy","Neutral","Disgust"],
 answer:"Surprise"
 }
 
 ];
 
+
+
 function showQuiz(){
+
+    trackActivity(
+        "Quiz"
+    );
 
     let html =
     `<div class="quiz-container">
@@ -222,6 +425,8 @@ function showQuiz(){
     );
 }
 
+
+
 function submitQuiz(e){
 
     e.preventDefault();
@@ -265,7 +470,8 @@ function submitQuiz(e){
 
     document
     .getElementById("result")
-    .innerHTML = `
+    .innerHTML =
+    `
     <div class="result">
 
         <h2>
@@ -278,6 +484,7 @@ function submitQuiz(e){
     `;
 }
 
+
 flashcardsBtn.addEventListener(
     "click",
     showFlashcards
@@ -288,4 +495,7 @@ quizBtn.addEventListener(
     showQuiz
 );
 
-showFlashcards();
+
+renderFlashcards();
+
+loadRecommendations();

@@ -16,7 +16,13 @@ from utils.face_preprocessing import preprocess_face
 from database import (
     create_database,
     save_prediction,
-    get_predictions
+    save_prediction_user,
+    get_predictions,
+    get_user_predictions,
+    create_user,
+    save_activity,
+    get_latest_prediction,
+    login_user
 )
 
 app = Flask(__name__)
@@ -67,13 +73,15 @@ def test():
 def routes():
     return jsonify({
         "available_routes": [
-            "/",
-            "/test",
-            "/routes",
-            "/history",
-            "/predict_audio",
-            "/predict_face"
-        ]
+          "/",
+          "/test",
+          "/routes",
+          "/signup",
+          "/login",
+          "/history",
+          "/predict_audio",
+          "/predict_face"
+]
     })
 
 
@@ -90,6 +98,7 @@ def predict_audio():
             }), 400
 
         file = request.files["audio"]
+        user_id = request.form.get("user_id")
 
         extension = os.path.splitext(
             file.filename
@@ -127,7 +136,8 @@ def predict_audio():
             np.max(probabilities) * 100
         )
 
-        save_prediction(
+        save_prediction_user(
+            user_id,
             "audio",
             file.filename,
             emotion,
@@ -170,6 +180,8 @@ def predict_face():
             }), 400
 
         file = request.files["image"]
+        user_id = request.form.get("user_id")
+        
 
         extension = os.path.splitext(
             file.filename
@@ -208,7 +220,8 @@ def predict_face():
             np.max(prediction) * 100
         )
 
-        save_prediction(
+        save_prediction_user(
+            user_id,
             "face",
             file.filename,
             emotion,
@@ -244,11 +257,137 @@ def predict_face():
 
             except Exception:
                 pass
+            
+            
+@app.route("/signup", methods=["POST"])
+def signup():
+
+    try:
+
+        data = request.get_json()
+
+        name = data.get("name")
+        email = data.get("email")
+        age = data.get("age")
+        password = data.get("password")
+
+        success = create_user(
+            name,
+            email,
+            age,
+            password
+        )
+
+        if success:
+
+            return jsonify({
+                "message": "Account created successfully"
+            })
+
+        return jsonify({
+            "error": "Email already exists"
+        }), 400
+
+    except Exception as e:
+
+        return jsonify({
+            "error": str(e)
+        }), 500
+        
+        
+@app.route("/login", methods=["POST"])
+def login():
+
+    try:
+
+        data = request.get_json()
+
+        email = data.get("email")
+        password = data.get("password")
+
+        user = login_user(
+            email,
+            password
+        )
+
+        if user:
+
+            return jsonify({
+                "user_id": user[0],
+                "name": user[1]
+            })
+
+        return jsonify({
+            "error": "Invalid credentials"
+        }), 401
+
+    except Exception as e:
+
+        return jsonify({
+            "error": str(e)
+        }), 500  
+        
+@app.route("/activity", methods=["POST"])
+def activity():
+
+    try:
+
+        data = request.get_json()
+
+        user_id = data.get("user_id")
+
+        emotion = data.get("emotion")
+
+        activity_name = data.get("activity_name")
+
+        save_activity(
+            user_id,
+            emotion,
+            activity_name
+        )
+
+        return jsonify({
+            "message":"Activity saved"
+        })
+
+    except Exception as e:
+
+        return jsonify({
+            "error":str(e)
+        }),500    
+        
+@app.route("/latest_prediction/<int:user_id>")
+def latest_prediction(user_id):
+
+    prediction = get_latest_prediction(
+        user_id
+    )
+
+    if prediction:
+
+        return jsonify({
+            "emotion": prediction[0],
+            "timestamp": prediction[1]
+        })
+
+    return jsonify({
+        "emotion": None,
+        "timestamp": None
+    })                              
 
 @app.route("/history")
 def history():
 
     data = get_predictions()
+
+    return jsonify(data)
+
+@app.route("/history/<int:user_id>")
+def user_history(user_id):
+
+    data = get_user_predictions(
+        user_id
+    )
 
     return jsonify(data)
 

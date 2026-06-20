@@ -101,3 +101,26 @@ h1{
     background:white;
     border-radius:12px;
 }
+
+.recommendation-card{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    margin-top:25px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.08);
+    text-align:center;
+}
+
+#latestEmotion{
+    font-weight:bold;
+    color:#2563EB;
+}
+
+#recommendations{
+    margin-top:15px;
+}
+
+#recommendations p{
+    margin:8px 0;
+    font-weight:600;
+}

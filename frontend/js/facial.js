@@ -9,12 +9,11 @@ const uploadedPreview = document.getElementById("uploadedPreview");
 
 const emotionText = document.getElementById("emotion");
 const confidenceText = document.getElementById("confidence");
+const userId = localStorage.getItem("user_id");
 
 let stream = null;
 
 console.log("FACIAL.JS LOADED");
-
-/* Start Camera */
 
 startCamera.addEventListener(
     "click",
@@ -45,7 +44,6 @@ startCamera.addEventListener(
     }
 );
 
-/* Capture Face + Predict */
 
 captureBtn.addEventListener(
     "click",
@@ -97,12 +95,13 @@ captureBtn.addEventListener(
                         blob,
                         "capture.jpg"
                     );
+                    formData.append("user_id",userId);
 
                     try {
 
                         const response =
                             await fetch(
-                                "https://emotion-recognition.duckdns.org/predict_face",
+                                "http://127.0.0.1:5000/predict_face",
                                 {
                                     method: "POST",
                                     body: formData
@@ -215,12 +214,13 @@ uploadImageBtn.addEventListener(
             "image",
             file
         );
+        formData.append("user_id",userId);
 
         try {
 
             const response =
                 await fetch(
-                    "https://emotion-recognition.duckdns.org/predict_face",
+                    "http://127.0.0.1:5000/predict_face",
                     {
                         method: "POST",
                         body: formData
