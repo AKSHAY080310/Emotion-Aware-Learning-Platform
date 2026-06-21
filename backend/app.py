@@ -375,15 +375,7 @@ def latest_prediction(user_id):
         "emotion": None,
         "timestamp": None
     }) 
-    
-@app.route("/latest_prediction/<int:user_id>")
-def latest_prediction(user_id):
-
-    print("LATEST PREDICTION ROUTE HIT")
-
-    prediction = get_latest_prediction(user_id)
-
-    ...                                 
+                                 
 
 @app.route("/history")
 def history():
