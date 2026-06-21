@@ -132,6 +132,7 @@ def predict_audio():
             prediction
         )[0]
 
+
         confidence = float(
             np.max(probabilities) * 100
         )
