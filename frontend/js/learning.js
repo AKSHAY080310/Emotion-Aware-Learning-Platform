@@ -104,22 +104,12 @@ async function loadRecommendations(){
     try{
 
         const response =
-    await fetch(
-        `https://emotion-recognition.duckdns.org/latest_prediction/${userId}`
-    );
+            await fetch(
+                `https://emotion-recognition.duckdns.org/latest_prediction/${userId}`
+            );
 
-console.log(
-    "Status:",
-    response.status
-);
-
-const text =
-    await response.text();
-
-console.log(
-    "Response:",
-    text
-);   
+        const data =
+            await response.json();
 
         const emotionStatus =
             document.getElementById(
