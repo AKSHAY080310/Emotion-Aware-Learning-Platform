@@ -17,7 +17,7 @@ async function loadDashboard() {
         }
 
         const response = await fetch(
-            `http://127.0.0.1:5000/history/${userId}`
+            `https://emotion-recognition.duckdns.org/history/${userId}`
         );
 
         const data = await response.json();
