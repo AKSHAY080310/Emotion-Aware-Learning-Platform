@@ -50,6 +50,21 @@ h1{
     color:white;
 }
 
+#storyBtn{
+    background:#FF9800;
+    color:white;
+}
+
+#memoryBtn{
+    background:#693f70;
+    color:white;
+}
+
+#identifyBtn{
+    background:#f598d0;
+    color:white;
+}
+
 #content{
     margin-top:40px;
 }
@@ -123,4 +138,121 @@ h1{
 #recommendations p{
     margin:8px 0;
     font-weight:600;
+}
+
+
+.memory-header{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.memory-header h2{
+    color:#1E293B;
+    margin-bottom:10px;
+}
+
+.memory-header p{
+    color:#64748B;
+}
+
+
+
+.memory-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+    gap:20px;
+    margin:30px 0;
+}
+
+
+
+.memory-card{
+    background:white;
+    border-radius:15px;
+    height:140px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:2rem;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    box-shadow:0 4px 10px rgba(0,0,0,0.08);
+
+    transition:all 0.3s ease;
+}
+
+.memory-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 8px 20px rgba(0,0,0,0.12);
+}
+
+
+
+.memory-emoji{
+    font-size:3rem;
+}
+
+
+
+.memory-image{
+    width:90px;
+    height:90px;
+    object-fit:contain;
+}
+
+
+.memory-card.matched{
+    background:#DCFCE7;
+    border:2px solid #22C55E;
+}
+
+
+#memoryStats{
+    text-align:center;
+    font-size:1.1rem;
+    font-weight:600;
+    margin-top:20px;
+    color:#1E293B;
+}
+
+
+.memory-result{
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    text-align:center;
+
+    box-shadow:0 4px 15px rgba(0,0,0,0.08);
+}
+
+.memory-result h2{
+    color:#22C55E;
+    margin-bottom:15px;
+}
+
+.memory-result p{
+    font-size:1.1rem;
+    margin-bottom:20px;
+}
+
+.memory-result button{
+    background:#2563EB;
+    color:white;
+
+    border:none;
+    padding:12px 24px;
+
+    border-radius:10px;
+    cursor:pointer;
+
+    font-size:1rem;
+    transition:0.3s;
+}
+
+.memory-result button:hover{
+    background:#1D4ED8;
 }

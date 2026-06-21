@@ -9,7 +9,14 @@ const flashcardsBtn =
 const quizBtn =
     document.getElementById("quizBtn");
 
+const storyBtn =
+    document.getElementById("storyBtn");    
 
+const memoryBtn =
+    document.getElementById("memoryBtn");
+    
+const identifyBtn =
+    document.getElementById("identifyBtn");    
 
 
 function getRecommendations(emotion){
@@ -18,7 +25,8 @@ function getRecommendations(emotion){
 
         return [
             "Flashcards",
-            "Quiz"
+            "Quiz",
+            "Emotion Story"
         ];
     }
 
@@ -26,39 +34,61 @@ function getRecommendations(emotion){
 
         case "happy":
             return [
-                "Flashcards",
-                "Quiz"
+                "Quiz",
+                "Emotion Identification",
+                "Memory Match"
             ];
 
         case "sad":
             return [
-                "Flashcards"
+                "Emotion Story",
+                "Flashcards",
+                "Memory Match"
             ];
 
         case "angry":
             return [
-                "Flashcards"
+                "Memory Match",
+                "Flashcards",
+                "Emotion Story"
             ];
 
         case "fear":
             return [
-                "Flashcards",
-                "Quiz"
+                "Emotion Story",
+                "Memory Match",
+                "Emotion Identification"
             ];
 
         case "surprise":
             return [
-                "Quiz"
+                "Emotion Identification",
+                "Quiz",
+                "Memory Match"
+            ];
+
+        case "disgust":
+            return [
+                "Emotion Identification",
+                "Flashcards",
+                "Emotion Story"
+            ];
+
+        case "neutral":
+            return [
+                "Flashcards",
+                "Quiz",
+                "Emotion Identification"
             ];
 
         default:
             return [
                 "Flashcards",
-                "Quiz"
+                "Quiz",
+                "Emotion Story"
             ];
     }
 }
-
 
 async function loadRecommendations(){
 
@@ -75,7 +105,7 @@ async function loadRecommendations(){
 
         const response =
             await fetch(
-                `https://emotion-recognition.duckdns.org/latest_prediction/${userId}`
+                `http://127.0.0.1:5000/latest_prediction/${userId}`
             );
 
         const data =
@@ -166,7 +196,7 @@ async function trackActivity(activityName){
     try{
 
         await fetch(
-            "https://emotion-recognition.duckdns.org/activity",
+            "http://127.0.0.1:5000/activity",
             {
                 method:"POST",
 
@@ -495,6 +525,20 @@ quizBtn.addEventListener(
     showQuiz
 );
 
+storyBtn.addEventListener(
+    "click",
+    renderStory
+);
+
+memoryBtn.addEventListener(
+    "click",
+    renderMemoryGame
+);
+
+identifyBtn.addEventListener(
+    "click",
+    renderEmotionIdentification
+);
 
 renderFlashcards();
 
