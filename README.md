@@ -1,3 +1,3 @@
 # Emotion Recognition Project
 
-Assistive learning network for autistic children using face and speech emotion recognition.
+End-to-end multimodal emotion recognition platform using facial and speech analysis to deliver personalized learning experiences for autistic children.
