@@ -61,14 +61,6 @@ Emotion-Aware-Learning-Platform/
 └── emotion_recognition.db
 ```
 
-## 🏗️ System Architecture
-
-The platform follows a modular architecture that integrates computer vision, speech processing, machine learning, backend APIs, and cloud deployment into a single end-to-end system.
-
-> **Architecture Diagram**
-
-*(Architecture diagram will be added here.)*
-
 ## 🧠 Machine Learning Pipeline
 
 ### Facial Emotion Recognition
@@ -133,20 +125,6 @@ The speech emotion recognition model is trained using an emotion-labelled speech
 - Speech model trained using Scikit-learn
 - Real-time prediction support
 - Cloud deployment on AWS EC2
-
-## 📸 Application Screenshots
-
-| Home | Dashboard |
-|------|-----------|
-| *(Add Screenshot)* | *(Add Screenshot)* |
-
-| Facial Recognition | Speech Recognition |
-|-------------------|--------------------|
-| *(Add Screenshot)* | *(Add Screenshot)* |
-
-| Learning Module | Prediction Result |
-|----------------|-------------------|
-| *(Add Screenshot)* | *(Add Screenshot)* |
 
 ## ⚙️ Installation
 
@@ -216,6 +194,17 @@ Browser → Nginx → Gunicorn → Flask Backend → Machine Learning Models →
 - Expand learning activities.
 - Deploy using Docker and Kubernetes.
 - Integrate PostgreSQL for scalable data management.
+
+## 📚 Documentation
+
+Detailed project documentation is available in the `docs/` folder.
+
+- Architecture → `docs/Architecture.md`
+- API Documentation → `docs/Api.md`
+- User Guide → `docs/UserGuide.md`
+- Deployment Guide → `docs/Deployment.md`
+- Project Workflow → `docs/ProjectWorkflow.md`
+- Future Enhancements → `docs/FutureEnhancements.md`
 
 ## 👨‍💻 Author
 
