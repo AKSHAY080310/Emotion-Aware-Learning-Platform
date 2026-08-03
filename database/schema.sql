@@ -1,0 +1,26 @@
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    age INTEGER,
+    password TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS predictions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    file_type TEXT,
+    filename TEXT,
+    emotion TEXT,
+    confidence REAL
+);
+
+CREATE TABLE IF NOT EXISTS activities (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    emotion TEXT,
+    activity_name TEXT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+);

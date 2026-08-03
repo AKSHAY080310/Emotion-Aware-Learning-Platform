@@ -2,8 +2,22 @@ async function loadDashboard() {
 
     try {
 
+        const userId =
+            localStorage.getItem(
+                "user_id"
+        );
+
+        if(!userId){
+
+            console.error(
+                "User ID not found"
+            );
+
+            return;
+        }
+
         const response = await fetch(
-            "https://emotion-recognition.duckdns.org/history"
+            `https://emotion-recognition.duckdns.org/history/${userId}`
         );
 
         const data = await response.json();

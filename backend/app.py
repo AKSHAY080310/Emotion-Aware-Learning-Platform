@@ -132,6 +132,7 @@ def predict_audio():
             prediction
         )[0]
 
+
         confidence = float(
             np.max(probabilities) * 100
         )
@@ -373,7 +374,8 @@ def latest_prediction(user_id):
     return jsonify({
         "emotion": None,
         "timestamp": None
-    })                              
+    }) 
+                                 
 
 @app.route("/history")
 def history():
